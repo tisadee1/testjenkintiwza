@@ -1,35 +1,14 @@
 pipeline {
-
-    agent any
-
+    agent {
+        docker {
+            image 'maven:3-alpine'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
     stages {
-
-        stage('Build Package file jar'){
+        stage('Build') {
             steps {
-                echo 'Build Package file jar'
-                echo '******************************'
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Upload jar file on Nexus server') {
-            steps {
-                echo 'Deploy on Nexus server'
-                echo '******************************'
-            }
-        }
-
-        stage('Deploy for test sit uat') {
-            steps {
-                echo 'Deploy for test sit uat'
-                echo '******************************'
-            }
-        }
-
-        stage('Start app on server') {
-            steps{
-                echo 'Start app'
-                echo '******************************'
+                sh 'mvn -B -DskipTests clean package'
             }
         }
     }
